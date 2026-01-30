@@ -29,3 +29,4 @@ export { ResearchReport } from "./ResearchReport";
 export { SpreadsheetData } from "./SpreadsheetData";
 export { SwarmSpeed } from "./SwarmSpeed";
 export { SupportHive } from "./SupportHive";
+export { ExcelAtScale } from "./ExcelAtScale";

@@ -2,7 +2,7 @@
 
 import { useInView } from "react-intersection-observer";
 import { motion, useAnimation } from "framer-motion";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, RotateCw } from "lucide-react";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +43,7 @@ export function LazyAnimationWrapper({
   const [hasPlayed, setHasPlayed] = useState(false);
   const controls = useAnimation();
   const hasTriggeredRef = useRef(false);
+  const currentPauseStateRef = useRef(false);
 
   useEffect(() => {
     if (inView && !hasTriggeredRef.current) {
@@ -59,7 +60,22 @@ export function LazyAnimationWrapper({
   }, [inView, triggerOnce, controls]);
 
   const togglePause = () => {
-    setIsPaused(!isPaused);
+    const newState = !currentPauseStateRef.current;
+    currentPauseStateRef.current = newState;
+    setIsPaused(newState);
+
+    // Send pause/play message to child animations via postMessage
+    if (newState) {
+      window.postMessage('pause', '*');
+    } else {
+      window.postMessage('play', '*');
+    }
+  };
+
+  const resetAnimation = () => {
+    currentPauseStateRef.current = false;
+    setIsPaused(false);
+    window.postMessage('reset', '*');
   };
 
   return (
@@ -80,17 +96,26 @@ export function LazyAnimationWrapper({
           </motion.div>
 
           {pauseButton && (
-            <button
-              onClick={togglePause}
-              className="absolute top-2 right-2 p-2 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-white backdrop-blur-sm transition-colors"
-              aria-label={isPaused ? "Play animation" : "Pause animation"}
-            >
-              {isPaused ? (
-                <Play className="w-4 h-4" fill="currentColor" />
-              ) : (
-                <Pause className="w-4 h-4" />
-              )}
-            </button>
+            <div className="absolute top-2 right-2 flex gap-2">
+              <button
+                onClick={togglePause}
+                className="p-2 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-white backdrop-blur-sm transition-colors"
+                aria-label={isPaused ? "Play animation" : "Pause animation"}
+              >
+                {isPaused ? (
+                  <Play className="w-4 h-4" fill="currentColor" />
+                ) : (
+                  <Pause className="w-4 h-4" />
+                )}
+              </button>
+              <button
+                onClick={resetAnimation}
+                className="p-2 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-white backdrop-blur-sm transition-colors"
+                aria-label="Restart animation"
+              >
+                <RotateCw className="w-4 h-4" />
+              </button>
+            </div>
           )}
         </>
       ) : (
