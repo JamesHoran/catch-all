@@ -7,8 +7,6 @@ import {
   SwarmLauncher,
   ResearchReport,
   SpreadsheetData,
-  SwarmSpeed,
-  SupportHive,
 } from "@/components/animations/use-cases";
 
 interface TabDemoProps {
@@ -20,8 +18,6 @@ const tabDemos = [
   { id: "swarm-launcher", label: "🚀 App Builder", component: SwarmLauncher },
   { id: "research-report", label: "📝 Report Writer", component: ResearchReport },
   { id: "spreadsheet-data", label: "📊 Spreadsheet", component: SpreadsheetData },
-  { id: "swarm-speed", label: "⚡ Speed Test", component: SwarmSpeed },
-  { id: "support-hive", label: "💬 Support Hive", component: SupportHive },
 ];
 
 type DemoComponentType = React.ComponentType;
@@ -75,27 +71,6 @@ export function TabDemo({ defaultDemoId = "swarm-launcher" }: TabDemoProps) {
           </motion.button>
         ))}
       </div>
-
-      {/* Demo Info */}
-      {currentDemo && (
-        <motion.div
-          className="text-center shrink-0"
-          key={currentDemo.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h3 className="text-xl font-bold text-white">
-            {currentDemo.label.split(" ").slice(1).join(" ")}
-          </h3>
-          <p className="text-sm text-slate-400 mt-1">
-            {currentDemo.id === "swarm-launcher" && "Type a single prompt and watch 10 agents build your app"}
-            {currentDemo.id === "research-report" && "Watch AI agents collaborate to write a comprehensive research report"}
-            {currentDemo.id === "spreadsheet-data" && "AI agent creates spreadsheets, fills data, and performs Excel-like calculations"}
-            {currentDemo.id === "swarm-speed" && "See the dramatic speed difference: 1 agent vs 10,000 agents working in parallel"}
-            {currentDemo.id === "support-hive" && "24/7 customer support with intelligent agent routing"}
-          </p>
-        </motion.div>
-      )}
 
       {/* Demo Display - Full Height */}
       <motion.div

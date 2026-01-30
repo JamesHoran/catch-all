@@ -90,8 +90,8 @@ export function SwarmLauncher() {
     const activeLeaderAgents = 10;
 
     const progressInterval = setInterval(() => {
-      // Add random increment
-      progress += Math.random() * 8 + 2;
+      // Add random increment (1-2% for ~7 second average build time)
+      progress += Math.random() * 1 + 1;
 
       // Ensure we hit exactly 100 when close enough
       if (progress >= 99) {

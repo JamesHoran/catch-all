@@ -241,11 +241,11 @@ export function SpreadsheetData() {
               {isComplete && ` Complete! ${filledCells.length} cells`}
             </span>
             <motion.div
-              className="ml-auto flex items-center gap-2 text-xs"
+              className="ml-auto flex items-center gap-1.5 text-xs"
               animate={isComplete ? {} : { opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <BotAvatar role={AGENT_ROLE} color={AGENT_COLOR} size="sm" />
+              <BotAvatar role={AGENT_ROLE} color={AGENT_COLOR} size="xs" />
               <span className={isComplete ? "text-emerald-100" : "text-emerald-400"}>
                 {isComplete ? "Done!" : "Agent filling..."}
               </span>

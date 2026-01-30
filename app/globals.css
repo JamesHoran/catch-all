@@ -54,6 +54,7 @@
   --color-bg-card: var(--bg-card);
 }
 
+/* Force light theme for consistency with design */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

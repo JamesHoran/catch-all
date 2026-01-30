@@ -200,6 +200,7 @@ export function HeroCarousel({ demos, autoPlayInterval = 5000, onDemoClick, clas
                         delay: i * 0.2,
                         ease: "linear",
                       }}
+                      suppressHydrationWarning
                     />
                   ))}
                 </motion.div>

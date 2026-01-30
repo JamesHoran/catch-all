@@ -176,7 +176,7 @@ export function ResearchReport() {
           <div className="w-full max-w-[320px]">
             {/* Document container */}
             <motion.div
-              className="bg-slate-900/90 border border-slate-700 rounded-xl p-5 shadow-2xl"
+              className="bg-slate-900/90 border border-slate-700 rounded-xl p-4 shadow-2xl"
               animate={isGenerating && !isComplete ? {
                 scale: [1, 1.005, 1],
                 borderColor: [
@@ -209,7 +209,7 @@ export function ResearchReport() {
               </div>
 
               {/* Lines area */}
-              <div className="space-y-1.5 max-h-[280px] overflow-hidden pr-2">
+              <div className="space-y-2 h-[260px] overflow-y-auto pr-2 scroll-smooth">
                 <AnimatePresence>
                   {lines.map((line, index) => (
                     <motion.div
@@ -221,9 +221,9 @@ export function ResearchReport() {
                     >
                       {/* Line with agent icon - with pulsing animation */}
                       <motion.div
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 relative overflow-hidden"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 relative overflow-hidden"
                         animate={{
-                          scale: [1, 1.02, 1],
+                          scale: [1, 1.01, 1],
                           borderColor: [
                             "rgb(51, 65, 85)",
                             "rgb(6, 182, 212)",
@@ -254,9 +254,9 @@ export function ResearchReport() {
 
                         {/* Shimmer effect */}
                         <motion.div
-                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent"
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-cyan-400/15 to-transparent"
                           animate={{
-                            x: ["-100%", "100%"],
+                            backgroundPosition: ["-200% center", "200% center"],
                           }}
                           transition={{
                             duration: 2,
@@ -264,13 +264,15 @@ export function ResearchReport() {
                             ease: "linear",
                             delay: index * 0.2,
                           }}
+                          style={{ backgroundSize: "200% 100%" }}
                         />
 
                         {/* Agent icon with vibration */}
                         <motion.div
+                          className="shrink-0"
                           animate={{
-                            rotate: [0, -2, 2, -2, 0],
-                            scale: [1, 1.05, 1],
+                            rotate: [0, -1.5, 1.5, -1.5, 0],
+                            scale: [1, 1.03, 1],
                           }}
                           transition={{
                             duration: 0.5,
@@ -284,7 +286,7 @@ export function ResearchReport() {
 
                         {/* Text with subtle pulse */}
                         <motion.p
-                          className="text-[10px] text-slate-300 relative z-10"
+                          className="text-[10px] text-slate-300 shrink-0"
                           animate={{
                             opacity: [0.8, 1, 0.8],
                           }}
@@ -300,23 +302,23 @@ export function ResearchReport() {
 
                         {/* Typing dots */}
                         <motion.div
-                          className="flex gap-0.5 ml-auto relative z-10"
-                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          className="flex gap-0.5 ml-auto shrink-0"
+                          animate={{ opacity: [0.6, 1, 0.6] }}
                           transition={{ duration: 1, repeat: Infinity, delay: index * 0.2 }}
                         >
                           <motion.div
                             className="w-0.5 h-0.5 rounded-full bg-cyan-400"
-                            animate={{ scaleY: [1, 1.5, 1] }}
+                            animate={{ scaleY: [1, 1.4, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity, delay: index * 0.2 }}
                           />
                           <motion.div
                             className="w-0.5 h-0.5 rounded-full bg-cyan-400"
-                            animate={{ scaleY: [1, 1.5, 1] }}
+                            animate={{ scaleY: [1, 1.4, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity, delay: index * 0.2 + 0.1 }}
                           />
                           <motion.div
                             className="w-0.5 h-0.5 rounded-full bg-cyan-400"
-                            animate={{ scaleY: [1, 1.5, 1] }}
+                            animate={{ scaleY: [1, 1.4, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity, delay: index * 0.2 + 0.2 }}
                           />
                         </motion.div>
