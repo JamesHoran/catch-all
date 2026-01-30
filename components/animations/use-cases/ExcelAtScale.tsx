@@ -171,6 +171,8 @@ export function ExcelAtScale() {
   const [filledCells, setFilledCells] = useState<FilledCell[]>([]);
   const [currentCell, setCurrentCell] = useState<{ row: number; col: string } | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [zoomOut, setZoomOut] = useState(false);
+  const [startFilling, setStartFilling] = useState(false);
   const isPaused = useRef(false);
   const cellIndexRef = useRef(0);
   const animationIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -182,37 +184,54 @@ export function ExcelAtScale() {
     setFilledCells([]);
     setCurrentCell(null);
     setIsComplete(false);
+    setZoomOut(false);
+    setStartFilling(false);
     cellIndexRef.current = 0;
     isPaused.current = false;
 
-    // Start filling cells
-    const interval = setInterval(() => {
+    // Step 1: Start zoomed in, then zoom out after 1 second
+    const zoomTimeout = setTimeout(() => {
       if (isPaused.current) return;
+      setZoomOut(true);
+    }, 1000);
 
-      if (cellIndexRef.current < CELL_DATA.length) {
-        const cell = CELL_DATA[cellIndexRef.current];
-        setFilledCells((prev) => [...prev, cell]);
-        setCurrentCell({ row: cell.row, col: cell.col });
-        cellIndexRef.current += 1;
+    // Step 2: After zoom completes (4s), start filling cells
+    const fillDelay = 5000; // 1s initial wait + 4s zoom duration
+    const fillStartTimeout = setTimeout(() => {
+      if (isPaused.current) return;
+      setStartFilling(true);
 
-        if (cellIndexRef.current >= CELL_DATA.length) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsComplete(true);
-            setCurrentCell(null);
-            // Reset and loop
-            resetTimeoutRef.current = setTimeout(() => {
-              startAnimation();
-            }, 4000);
-          }, 500);
+      // Start filling cells
+      const interval = setInterval(() => {
+        if (isPaused.current) return;
+
+        if (cellIndexRef.current < CELL_DATA.length) {
+          const cell = CELL_DATA[cellIndexRef.current];
+          setFilledCells((prev) => [...prev, cell]);
+          setCurrentCell({ row: cell.row, col: cell.col });
+          cellIndexRef.current += 1;
+
+          if (cellIndexRef.current >= CELL_DATA.length) {
+            clearInterval(interval);
+            setTimeout(() => {
+              setIsComplete(true);
+              setCurrentCell(null);
+              // Reset and loop
+              resetTimeoutRef.current = setTimeout(() => {
+                startAnimation();
+              }, 4000);
+            }, 500);
+          }
         }
-      }
-    }, 80);
+      }, 80);
 
-    animationIntervalRef.current = interval;
+      animationIntervalRef.current = interval;
+    }, fillDelay);
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(zoomTimeout);
+      clearTimeout(fillStartTimeout);
+      if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
     };
   }, []);
@@ -256,20 +275,26 @@ export function ExcelAtScale() {
       title="Excel at Scale"
       description="9 AI agents processing spreadsheets in perfect synchronization"
     >
-      <div className="relative w-full h-full flex items-center justify-center p-6">
-        {/* 3x3 Grid of 9 Spreadsheets */}
-        <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
+      <div className="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
+        {/* 3x3 Grid of 9 Spreadsheets with zoom effect */}
+        <motion.div
+          className="grid grid-cols-3 gap-4 w-full max-w-4xl"
+          initial={{ scale: 3.5, x: -180, y: 180 }}
+          animate={zoomOut ? { scale: 1, x: 0, y: 0 } : { scale: 3.5, x: -180, y: 180 }}
+          transition={{ duration: 4, ease: "easeInOut" }}
+          style={{ transformOrigin: "top left" }}
+        >
           {[...Array(9)].map((_, i) => (
             <MiniSpreadsheet
               key={i}
               index={i}
-              filledCells={filledCells}
+              filledCells={startFilling ? filledCells : []}
               currentCell={currentCell}
               isComplete={isComplete}
               isVisible={true}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* Completion Banner */}
         <AnimatePresence>
